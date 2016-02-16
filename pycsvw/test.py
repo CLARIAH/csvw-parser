@@ -103,9 +103,12 @@ def test():
             pprint.pprint(c.value)
     pprint.pprint(csvw.table.rows)
 
-    pprint.pprint(csvw.metadata.json())
+#     pprint.pprint(csvw.metadata)
+    
+    for subj, pred, obj in csvw.metadata:
+        print (subj, pred, obj)
 
-    csvw.to_json()
+    csvw.to_rdf()
 
 
 

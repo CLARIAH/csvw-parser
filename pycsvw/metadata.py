@@ -1072,31 +1072,31 @@ def normalize(metadata):
     return model
 
 
-def merge(meta_sources):
-    """
-    from highest priority to lowest priority by merging the first two metadata files
-    """
-    # at first normalize (and validate) the metadata objects
-    norm_sources = []
-    for s in meta_sources:
-        norm = normalize(s)
-        if norm:
-            norm_sources.append(norm)
-        else:
-            raise ValidationException('validation failed for metadata: ' + str(s))
-
-
-    # then merge them into one object
-    A = None
-    for m in norm_sources:
-        # check if m is a valid metadata object
-        if m:
-            B = m
-            # check if we are in the first iteration
-            if not A:
-                A = B
-            else:
-                A.merge(B)
-    return A
+# def merge(meta_sources):
+#     """
+#     from highest priority to lowest priority by merging the first two metadata files
+#     """
+#     # at first normalize (and validate) the metadata objects
+#     norm_sources = []
+#     for s in meta_sources:
+#         norm = normalize(s)
+#         if norm:
+#             norm_sources.append(norm)
+#         else:
+#             raise ValidationException('validation failed for metadata: ' + str(s))
+# 
+# 
+#     # then merge them into one object
+#     A = None
+#     for m in norm_sources:
+#         # check if m is a valid metadata object
+#         if m:
+#             B = m
+#             # check if we are in the first iteration
+#             if not A:
+#                 A = B
+#             else:
+#                 A.merge(B)
+#     return A
 
 

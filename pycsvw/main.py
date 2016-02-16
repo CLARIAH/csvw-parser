@@ -4,7 +4,8 @@ import logging
 import parser
 from pycsvw import metadata
 from pycsvw import json_generator
-import metadata_extractor
+from pycsvw import rdf_generator
+import metadata_graph_extractor
 
 
 __author__ = 'sebastian'
@@ -46,12 +47,13 @@ class CSVW:
         self.table, embedded_metadata = parser.parse(handle, url)
 
         # TODO create settings using arguments or provided metadata
-        sources = metadata_extractor.metadata_extraction(url, metadata_handle, embedded_metadata=embedded_metadata)
-        self.metadata = metadata.merge(sources)
+        self.metadata = metadata_graph_extractor.metadata_graph_extraction(url, metadata_handle, embedded_metadata=embedded_metadata)
+
 
     def to_rdf(self):
-        pass
+        rdf = rdf_generator.standard_mode(self.table, self.metadata)
+        return rdf
 
     def to_json(self):
         # TODO group of tables?
-        json_generator.minimal_mode(self.table, self.metadata.json()['tables'][0])
+        json_generator.minimal_mode(self.table, self.metadata)
