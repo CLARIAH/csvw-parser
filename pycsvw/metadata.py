@@ -1,6 +1,6 @@
 import re
-from pycsvw import built_in_datatypes
-from pycsvw.parser_exceptions import ValidationException
+import built_in_datatypes
+from parser_exceptions import ValidationException
 import logger
 import urlparse
 import language_tags
@@ -25,10 +25,10 @@ class Enumeration(object):
 Option = Enumeration('Required', 'NonEmpty')
 Commands = Enumeration('Remove', 'Error')
 
-#class Option:
+# class Option:
 #    Required, NonEmpty = range(2)
 
-#class Commands:
+# class Commands:
 #    Remove = 'REMOVE'
 #    Error = 'ERROR'
 
@@ -150,7 +150,7 @@ class NumberPattern(Property):
     def evaluate(self, meta, params, default=None, line=None):
         result = NumberPattern()
         if isinstance(meta, basestring):
-            logger.debug(line, 'Number pattern property: ',  meta)
+            logger.debug(line, 'Number pattern property: ', meta)
             result.value = meta
             return result
         else:
@@ -397,7 +397,7 @@ class IsBuiltinDatatype(Operator):
             logger.warning(line, 'Value is not a built in datatype: ', meta)
             return Commands.Remove
         else:
-            #TODO logger.error(line, 'Value is not a built in datatype: ', meta)
+            # TODO logger.error(line, 'Value is not a built in datatype: ', meta)
             return False
 
 

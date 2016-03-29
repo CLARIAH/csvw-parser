@@ -1,4 +1,4 @@
-from pycsvw.parser_exceptions import ParserException
+from parser_exceptions import ParserException
 
 __author__ = 'neumaier'
 
@@ -127,6 +127,10 @@ def parse(handle, url, settings=SETTINGS):
             if len(M['tableSchema']['columns']) == 0:
                 M['tableSchema']['columns'] = [{'titles': []} for _ in range(len(cells))]
             for cell_i, v in enumerate(cells):
+#                 print cell_i 
+#                 print v 
+#                 print 
+                
                 value = v.strip()
                 if value == '':
                     pass
@@ -190,7 +194,7 @@ class Cell:
         self.value_url = None
 
     def __repr__(self):
-        return 'C' + str(self.row) + str(self.column)
+        return 'Cell' + str(self.row) + str(self.column)
 
 
 class Column:
@@ -206,7 +210,7 @@ class Column:
         self.cells = []
 
     def __repr__(self):
-        return 'C' + str(self.number)
+        return 'Column' + str(self.number)
 
 
 class Row:
@@ -219,7 +223,7 @@ class Row:
         self.cells = []
 
     def __repr__(self):
-        return 'R' + str(self.number)
+        return 'Row' + str(self.number)
 
 class Table:
     def __init__(self, url):

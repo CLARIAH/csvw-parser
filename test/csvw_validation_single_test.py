@@ -11,6 +11,7 @@ if __name__ == '__main__':
     for i, t in enumerate(manifest['entries']):
         if t['id'].endswith(test_id):
             test_name = ' '.join(['test', t['id'], t['type'], t['name']])
+            print test_name
             action_url = t['action']
             action_url = urlparse.urljoin(BASE, action_url)
             implicit = []

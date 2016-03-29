@@ -5,8 +5,13 @@ import json
 from StringIO import StringIO
 import datetime
 import rdflib
-from pycsvw import CSVW, metadata
+import os
+parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0, parentdir) 
+from pycsvw import metadata
+from pycsvw.main import CSVW
 import urllib2
+
 
 MAX_TESTS = -1
 MANIFEST = 'http://w3c.github.io/csvw/tests/manifest-validation.jsonld'
@@ -48,7 +53,7 @@ def test_generator(csv_url, implicit, type, option):
         self.assertNotEqual(csvw.metadata, None)
 
         result_table = csvw.table
-        result_meta = csvw.metadata.json()
+        result_meta = csvw.metadata
 
     return test
 
@@ -126,14 +131,14 @@ def implementation_report(graph, subject, assertor):
     for i, t in enumerate(manifest['entries']):
         # add the properties for a test case
         assertion = rdflib.BNode()
-        graph.add( (assertion, rdflib.RDF.type, EARL.Assertion) )
-        graph.add( (assertion, EARL.assertedBy, assertor) )
-        graph.add( (assertion, EARL.subject, subject) )
-        graph.add( (assertion, EARL.test, rdflib.URIRef(validation_html + t['id'])) )
+        graph.add((assertion, rdflib.RDF.type, EARL.Assertion))
+        graph.add((assertion, EARL.assertedBy, assertor))
+        graph.add((assertion, EARL.subject, subject))
+        graph.add((assertion, EARL.test, rdflib.URIRef(validation_html + t['id'])))
         result = rdflib.BNode()
-        graph.add( (assertion, EARL.result, result) )
-        graph.add( (result, rdflib.RDF.type, EARL.TestResult) )
-        graph.add( (result, EARL.mode, EARL.automatic) )
+        graph.add((assertion, EARL.result, result))
+        graph.add((result, rdflib.RDF.type, EARL.TestResult))
+        graph.add((result, EARL.mode, EARL.automatic))
 
         # TODO edit this hack...
         # run test case
@@ -153,17 +158,18 @@ def implementation_report(graph, subject, assertor):
             outcome = EARL.passed
         else:
             outcome = EARL.failed
-        graph.add( (result, EARL.outcome, outcome) )
+        graph.add((result, EARL.outcome, outcome))
 
         # add timestamp
         now = datetime.datetime.now().isoformat()
-        graph.add( (result, DC.date, rdflib.Literal(now, datatype=XSD.date)))
+        graph.add((result, DC.date, rdflib.Literal(now, datatype=XSD.date)))
 
 
 if __name__ == '__main__':
     manifest = get_manifest()
     for i, t in enumerate(manifest['entries']):
         test_name = ' '.join(['test', t['id'], t['type'], t['name']])
+        print test_name 
         meth = get_test_method(i, t)
         if meth:
             setattr(CSVWValidationTestCases, test_name, meth)

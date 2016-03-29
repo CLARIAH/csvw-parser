@@ -1,10 +1,10 @@
 from StringIO import StringIO
 import urllib2
 import logging
-import parser
-from pycsvw import metadata
-from pycsvw import json_generator
-from pycsvw import rdf_generator
+import csv_parser
+import metadata
+import json_generator
+import rdf_generator
 import metadata_graph_extractor
 
 
@@ -44,7 +44,7 @@ class CSVW:
             metadata_handle = open(metadata_path, 'rb')
 
         # Retrieve the tabular data file.
-        self.table, embedded_metadata = parser.parse(handle, url)
+        self.table, embedded_metadata = csv_parser.parse(handle, url)
 
         # TODO create settings using arguments or provided metadata
         self.metadata = metadata_graph_extractor.metadata_graph_extraction(url, metadata_handle, embedded_metadata=embedded_metadata)
@@ -56,4 +56,5 @@ class CSVW:
 
     def to_json(self):
         # TODO group of tables?
-        json_generator.minimal_mode(self.table, self.metadata)
+        json = json_generator.minimal_mode(self.table, self.metadata)
+        return json
