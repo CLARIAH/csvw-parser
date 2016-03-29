@@ -3,11 +3,11 @@ import urllib2
 import os
 import simplejson
 from pycsvw import metadata
-from rdflib import Graph
+from rdflib import Graph, ConjunctiveGraph
 import urllib, json
 from rdflib.plugin import register, Serializer
-from rdflib.graph import ConjunctiveGraph
 from cStringIO import StringIO
+from rdflib.term import BNode
 register('json-ld', Serializer, 'rdflib_jsonld.serializer', 'JsonLDSerializer')
 
 
@@ -27,10 +27,11 @@ DIRECTORY_METADATA = ['metadata.json', 'csv-metadata.json']
 def parse_to_graph(metadata_handle):
     meta_json = simplejson.load(metadata_handle)
     # meta = metadata.validate(meta_json)
-
+    
     meta_graph = ConjunctiveGraph()
     meta_graph.parse(data=json.dumps(meta_json), format='json-ld')
-
+    
+    
     return meta_graph
 
   
@@ -48,8 +49,6 @@ def metadata_graph_extraction(url, metadata_handle, embedded_metadata=False):
 
     # case  2
     if embedded_metadata:        
-        
-#         print embedded_metadata
         
         new_graph = parse_to_graph(StringIO(json.dumps(embedded_metadata)))    
         meta_graph = meta_graph + new_graph
@@ -75,7 +74,9 @@ def metadata_graph_extraction(url, metadata_handle, embedded_metadata=False):
             response = urllib2.urlopen(meta_url)
             if response.getcode() == 200:
                 logger.debug('found file specific metadata: %s', meta_url)
-                meta_graph.parse(parse_to_graph(response))
+                new_graph = parse_to_graph(response)
+                meta_graph = meta_graph + new_graph
+                
         except urllib2.URLError:
             pass
 

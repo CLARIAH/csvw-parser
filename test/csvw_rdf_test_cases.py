@@ -61,8 +61,8 @@ def test_generator(csv_file, result_url, implicit, type, option):
         result = gr.parse(result_url)
         converted_result = csvw.to_rdf()
     
-        result.serialize('output/' + name + '.ttl', format='turtle')
-        converted_result.serialize('output/converted_' + name + '.ttl', format='turtle')
+        result.serialize('output_rdf/' + name + '.ttl', format='turtle')
+        converted_result.serialize('output_rdf/generated' + name + '.ttl', format='turtle')
         
         self.assertTrue(compare.isomorphic(result, converted_result))
         

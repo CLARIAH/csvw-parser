@@ -1,24 +1,22 @@
-import unittest
 import urlparse
-from csvw_rdf_test_cases import get_manifest, BASE, test_generator, CSVWRDFTestCases
+import unittest
+from csvw_json_test_cases import get_manifest, BASE, test_generator, CSVWJSONTestCases
 
-__author__ = 'sebastian'
 
 if __name__ == '__main__':
+    
     test_no = input('Test No.: ')
     test_id = '#test' + str(test_no).zfill(3)
     manifest = get_manifest()
     for i, t in enumerate(manifest['entries']):
         
         if t['id'].endswith(test_id):
-        
-    
-            test_name = 'test ' + t['type'] + ': ' + t['name']
             
+            test_name = 'test ' + t['type'] + ': ' + t['name']
             print test_name 
+            print 
             
             csv_file = t['action']
-            
             csv_file = urlparse.urljoin(BASE, csv_file)
     
             result = None
@@ -29,14 +27,12 @@ if __name__ == '__main__':
             if 'implicit' in t:
                 for f in t['implicit']:
                     implicit.append(urlparse.urljoin(BASE, f))
-                    
+    
             if 'metadata' in t['option']:
                 t['option']['metadata'] = urlparse.urljoin(BASE, t['option']['metadata'])
-            
     
             test = test_generator(csv_file, result, implicit, t['type'], t['option'])
-            setattr(CSVWRDFTestCases, test_name, test)
+            setattr(CSVWJSONTestCases, test_name, test)
 
 
     unittest.main()
-

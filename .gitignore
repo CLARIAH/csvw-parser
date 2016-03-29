@@ -66,3 +66,7 @@ target/
 # Eclipse
 .project
 .pydevproject
+
+# test data 
+test/output_json
+test/output_rdf

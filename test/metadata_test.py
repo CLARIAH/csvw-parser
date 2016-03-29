@@ -1,11 +1,13 @@
+import unittest
+import os
+parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0, parentdir) 
 import pprint
-from pycsvw import CSVW
 from pycsvw import metadata
 from pycsvw.metadata import Model
 
 __author__ = 'sebastian'
 
-import unittest
 
 
 class DanBrickleyCase(unittest.TestCase):
@@ -271,8 +273,8 @@ class DanBrickleyCase(unittest.TestCase):
           ],
         }
         val = metadata.validate(A)
-        #print val.json()
-        #self.assertEqual(val.json(), A)
+        # print val.json()
+        # self.assertEqual(val.json(), A)
         val.normalize()
         json_res = val.json()
         print json_res
@@ -297,8 +299,8 @@ class DanBrickleyCase(unittest.TestCase):
               ]
         }
         val = metadata.validate(A)
-        #print val.json()
-        #self.assertEqual(val.json(), A)
+        # print val.json()
+        # self.assertEqual(val.json(), A)
         val.normalize()
         json_res = val.json()
         print json_res
@@ -359,7 +361,7 @@ class DanBrickleyCase(unittest.TestCase):
                 "name": "foo",
                 "titles": { "en": [ "Foo" ]},
                 "required": True
-              },{
+              }, {
                 "name": "bar"
               }]
             }
@@ -369,10 +371,10 @@ class DanBrickleyCase(unittest.TestCase):
         }
 
         # normalizing a
-        #norm_a = metadata.normalize(A)
-        #norm_b = metadata.normalize(B)
-        #pprint.pprint(norm_a.json())
-        #pprint.pprint(norm_b.json())
+        # norm_a = metadata.normalize(A)
+        # norm_b = metadata.normalize(B)
+        # pprint.pprint(norm_a.json())
+        # pprint.pprint(norm_b.json())
 
         result = metadata.merge([A, B])
         pprint.pprint(result.json())

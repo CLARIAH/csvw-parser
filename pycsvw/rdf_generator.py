@@ -7,14 +7,14 @@ import sys, traceback
 CSVW = Namespace('http://www.w3.org/ns/csvw#')
 MAJOR = Namespace('http://data.socialhistory.org/vocab/hisco/majorGroup/')
 MINOR = Namespace('http://data.socialhistory.org/vocab/hisco/minorGroup/')
-UNIT  = Namespace('http://data.socialhistory.org/vocab/hisco/unitGroup/')
+UNIT = Namespace('http://data.socialhistory.org/vocab/hisco/unitGroup/')
 CATEGORY = Namespace('http://data.socialhistory.org/vocab/hisco/category/')
-SKOS  = Namespace('http://www.w3.org/2004/02/skos/core#')
+SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
 
 
 def standard_mode(table, metadata):
         
-    FILE_URL  = Namespace(table.url + '#')
+    FILE_URL = Namespace(table.url + '#')
         
     g = Graph()
     g.bind('csvw', CSVW)
@@ -28,7 +28,7 @@ def standard_mode(table, metadata):
     g.add((t_bn, CSVW.url, URIRef(table.url)))  
     g.add((t_bn, RDF.type, CSVW.Table))
 
-    for s,p,o in metadata.triples( (None,  URIRef('http://www.w3.org/ns/csvw#column'), None) ):
+    for s, p, o in metadata.triples((None, URIRef('http://www.w3.org/ns/csvw#column'), None)):
         collection_resource = metadata.value(s, URIRef('http://www.w3.org/ns/csvw#column'))
         collection = Collection(metadata, collection_resource)
 
@@ -51,16 +51,18 @@ def standard_mode(table, metadata):
                 index = int(str(cell.column)[-1:]) - 1 
                 column_name = metadata.value(collection[index], URIRef('http://www.w3.org/ns/csvw#title'))
                 
-                iri = iribaker.to_iri(FILE_URL[column_name])
-                
+                iri = iribaker.to_iri(FILE_URL[column_name.replace(" ", "%20")])
+
                 try:
                     g.add((rd_bn, iri, Literal(cell.value)))
                 
                 except Exception: 
                     print "Exception!"
                     print column_name 
-                    print iri
                     print FILE_URL[column_name]
+                    print iri
+                    print Literal(cell.value)
+                    
                     traceback.print_exc(file=sys.stdout)
                     print
         
