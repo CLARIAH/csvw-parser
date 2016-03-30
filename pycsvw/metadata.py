@@ -1011,7 +1011,8 @@ def _validate(line, meta, params, schema, common_properties):
 
 
 def validate(metadata):
-    metadata = expand(metadata)
+    # expand only necessary if several tables!? 
+    # metadata = expand(metadata)
     # outer_group = Or(Object(TABLE_GROUP, inherited_obj=INHERITED, common_properties=True), Object(TABLE, inherited_obj=INHERITED, common_properties=True))
     outer_group = Object(TABLE_GROUP, inherited_obj=INHERITED, common_properties=True)
     params = {}
@@ -1021,11 +1022,13 @@ def validate(metadata):
         return False
     return Model(validated, params)
 
-def expand(meta):
+def expand(meta): 
+        
     # turn into table group description
     if 'tables' not in meta:
         tmp = {'tables': [meta]}
         context = meta.pop('@context', None)
+        print context 
         if context:
             tmp['@context'] = context
         return tmp

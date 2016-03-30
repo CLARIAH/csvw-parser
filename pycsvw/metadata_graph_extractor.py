@@ -48,8 +48,7 @@ def metadata_graph_extraction(url, metadata_handle, embedded_metadata=False):
         meta_graph = meta_graph + new_graph
 
     # case  2
-    if embedded_metadata:        
-        
+    if embedded_metadata:
         new_graph = parse_to_graph(StringIO(json.dumps(embedded_metadata)))    
         meta_graph = meta_graph + new_graph
 

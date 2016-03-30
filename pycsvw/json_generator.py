@@ -5,14 +5,12 @@ from dateutil.parser import parse
 import json
 
 
-def generate_object(url, row, metadata, collection):
+def generate_object(url, row, metadata):
     rowobject = {}
     rowobject['url'] = url + '#row=' + str(row.number + 1)
     rowobject['rownum'] = row.number
     
-    
-    
-    
+        
     cells = [] 
     cellsobject = {} 
     cells.append(cellsobject)
@@ -20,36 +18,12 @@ def generate_object(url, row, metadata, collection):
     for cell in row.cells:
         
         if cell.value != "": 
-        
-
-
             
-                index = int(str(cell.column)[-1:]) - 1 
-                column_name = metadata.value(collection[index], URIRef('http://www.w3.org/ns/csvw#name'))
-                if column_name is None: 
-                    column_name = metadata.value(collection[index], URIRef('http://www.w3.org/ns/csvw#title'))
-                
-                cellsobject[column_name] = cell.value
-                
-#                 print collection[index]
-                datatype = metadata.value(collection[index], URIRef('http://www.w3.org/ns/csvw#datatype'))
-#                 print datatype 
-                
-                
-                if isinstance(datatype, BNode):
-                    base = metadata.value(datatype, URIRef('http://www.w3.org/ns/csvw#base'))
-#                     print base 
-                    format = metadata.value(datatype, URIRef('http://www.w3.org/ns/csvw#format'))
-#                     print format 
-                    
-#                     if str(base) == "date": 
-#                         print "date!!!"
-                        
-#                 
-# dt = parse('Mon Feb 15 2010')
-                
-                
-                
+            column_name = cell.column.name 
+            if column_name is None: 
+                column_name = cell.column.titles[0] 
+
+            cellsobject[column_name] = cell.value
 
 
     rowobject['describes'] = cells
@@ -58,21 +32,7 @@ def generate_object(url, row, metadata, collection):
 
 
 
-
-
 def minimal_mode(table, metadata):
-
-#     if not metadata.get('suppressOutput', False):
-
-#     for subj, pred, obj in metadata:
-#         print subj, pred, obj 
-
-    
-    
-    columncollections = list(metadata.subject_objects(URIRef('http://www.w3.org/ns/csvw#column')))
-    for (s, collection_resource) in columncollections:
-        collection = Collection(metadata, collection_resource)
-    
     
     documentobject = {} 
     
@@ -120,7 +80,7 @@ def minimal_mode(table, metadata):
     
     rows = []
     for row in table.rows:
-        rowjson = generate_object(table.url, row, metadata, collection)
+        rowjson = generate_object(table.url, row, metadata)
         rows.append(rowjson)
     
     tableobject['row'] = rows

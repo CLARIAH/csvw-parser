@@ -9,15 +9,15 @@ from pycsvw import validator
 class TestCsvValidator(unittest.TestCase):
     
     def test_validate_csv_pass(self):
-        csvPath = os.path.join(parentdir, r"pycsvw/testdata/csvw-template/example.csv")
-        schemaPath = os.path.join(parentdir, r"pycsvw/testdata/csvw-template/example.csv-metadata.json")
+        csvPath = os.path.join(parentdir, r"test/testdata/csvw-template/example.csv")
+        schemaPath = os.path.join(parentdir, r"test/testdata/csvw-template/example.csv-metadata.json")
         (ret, error_message) = validator.validate_file(csvPath, schemaPath)
         self.assertTrue(ret)
 
     def test_validate_csv_column_missing(self):
-        csvPath = os.path.join(parentdir, "pycsvw/testdata/tree-ops.csv")
-        schemaPath = os.path.join(parentdir, r"pycsvw/testdata/test124-user-metadata.json")
-        expectedResultPath = os.path.join(parentdir, r"pycsvw/testdata/validate-result-missing-column.txt")
+        csvPath = os.path.join(parentdir, "test/testdata/tree-ops.csv")
+        schemaPath = os.path.join(parentdir, r"test/testdata/test124-user-metadata.json")
+        expectedResultPath = os.path.join(parentdir, r"test/testdata/validate-result-missing-column.txt")
         
         with open(expectedResultPath, 'r') as myfile:
             expectedResult = myfile.read()
@@ -26,9 +26,9 @@ class TestCsvValidator(unittest.TestCase):
         self.assertEqual(expectedResult.rstrip(), error_message.rstrip())
         
     def test_validate_csv_required_missing(self):
-        csvPath = os.path.join(parentdir, "pycsvw/testdata/test125.csv")
-        schemaPath = os.path.join(parentdir, r"pycsvw/testdata/test125-metadata.json")
-        expectedResultPath = os.path.join(parentdir, r"pycsvw/testdata/validate-result-required-fail.txt")
+        csvPath = os.path.join(parentdir, "test/testdata/test125.csv")
+        schemaPath = os.path.join(parentdir, r"test/testdata/test125-metadata.json")
+        expectedResultPath = os.path.join(parentdir, r"test/testdata/validate-result-required-fail.txt")
         
         with open(expectedResultPath, 'r') as myfile:
             expectedResult = myfile.read()
@@ -37,9 +37,9 @@ class TestCsvValidator(unittest.TestCase):
         self.assertEqual(expectedResult.rstrip(), error_message.rstrip())
         
     def test_validate_csv_primary_key_fail(self):
-        csvPath = os.path.join(parentdir, "pycsvw/testdata/test234.csv")
-        schemaPath = os.path.join(parentdir, r"pycsvw/testdata/test234-metadata.json")
-        expectedResultPath = os.path.join(parentdir, r"pycsvw/testdata/validate-result-primary-key-fail.txt")
+        csvPath = os.path.join(parentdir, "test/testdata/test234.csv")
+        schemaPath = os.path.join(parentdir, r"test/testdata/test234-metadata.json")
+        expectedResultPath = os.path.join(parentdir, r"test/testdata/validate-result-primary-key-fail.txt")
         
         with open(expectedResultPath, 'r') as myfile:
             expectedResult = myfile.read()

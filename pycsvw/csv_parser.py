@@ -127,9 +127,6 @@ def parse(handle, url, settings=SETTINGS):
             if len(M['tableSchema']['columns']) == 0:
                 M['tableSchema']['columns'] = [{'titles': []} for _ in range(len(cells))]
             for cell_i, v in enumerate(cells):
-#                 print cell_i 
-#                 print v 
-#                 print 
                 
                 value = v.strip()
                 if value == '':
@@ -176,7 +173,7 @@ def parse(handle, url, settings=SETTINGS):
     if not M['rdfs:comment']:
         M.pop('rdfs:comment')
 
-    # Return the table T and the embedded metadata M
+    
     return T, M
 
 
@@ -236,3 +233,5 @@ class Table:
         self.notes = False
         self.foreign_keys = []
         self.transformations = []
+        
+    

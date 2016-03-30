@@ -6,7 +6,7 @@ import metadata
 import json_generator
 import rdf_generator
 import metadata_graph_extractor
-
+import annotator 
 
 __author__ = 'sebastian'
 
@@ -43,12 +43,16 @@ class CSVW:
         elif metadata_path:
             metadata_handle = open(metadata_path, 'rb')
 
+       
+        
+        
         # Retrieve the tabular data file.
         self.table, embedded_metadata = csv_parser.parse(handle, url)
-
-        # TODO create settings using arguments or provided metadata
         self.metadata = metadata_graph_extractor.metadata_graph_extraction(url, metadata_handle, embedded_metadata=embedded_metadata)
 
+        self.table, self.metadata = annotator.annotate_table(self.table, self.metadata)
+
+            
 
     def to_rdf(self):
         rdf = rdf_generator.standard_mode(self.table, self.metadata)
