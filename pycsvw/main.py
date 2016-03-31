@@ -48,7 +48,8 @@ class CSVW:
         
         # Retrieve the tabular data file.
         self.table, embedded_metadata = csv_parser.parse(handle, url)
-        self.metadata = metadata_graph_extractor.metadata_graph_extraction(url, metadata_handle, embedded_metadata=embedded_metadata)
+        
+        self.metadata = metadata_graph_extractor.metadata_graph_extraction(url, metadata_handle, self.table.url, embedded_metadata=embedded_metadata)
 
         self.table, self.metadata = annotator.annotate_table(self.table, self.metadata)
 

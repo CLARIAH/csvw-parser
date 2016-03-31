@@ -9,11 +9,15 @@ def generate_object(url, row, metadata):
     rowobject = {}
     rowobject['url'] = url + '#row=' + str(row.number + 1)
     rowobject['rownum'] = row.number
-    
+
         
     cells = [] 
     cellsobject = {} 
     cells.append(cellsobject)
+    
+    
+    # quite a hack, will have to be generalized 
+    cellsobject['@id'] = row.cells[0].about_url
     
     for cell in row.cells:
         
@@ -44,7 +48,9 @@ def minimal_mode(table, metadata):
     tableobject = {}
     
     
+    # ugly hack for test cases 
     table.url = table.url.replace('w3c.github.io', 'www.w3.org/2013')
+    
     tableobject['url'] = table.url
     
     try: 
@@ -57,8 +63,7 @@ def minimal_mode(table, metadata):
         keywords = []
         for (s, keyword) in keylist:
             keywords.append(str(keyword))
-#             print keyword 
-#         print keywords 
+
         tableobject['dcat:keyword'] = keywords
         
         

@@ -192,6 +192,8 @@ class Cell:
 
     def __repr__(self):
         return 'Cell' + str(self.row) + str(self.column)
+    
+    
 
 
 class Column:
@@ -208,7 +210,7 @@ class Column:
 
     def __repr__(self):
         return 'Column' + str(self.number)
-
+    
 
 class Row:
     def __init__(self, table, number, source_number):

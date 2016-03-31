@@ -2,12 +2,11 @@ import logging
 import urllib2
 import os
 import simplejson
-from pycsvw import metadata
 from rdflib import Graph, ConjunctiveGraph
-import urllib, json
+import json
 from rdflib.plugin import register, Serializer
 from cStringIO import StringIO
-from rdflib.term import BNode
+from rdflib.term import URIRef
 register('json-ld', Serializer, 'rdflib_jsonld.serializer', 'JsonLDSerializer')
 
 
@@ -24,32 +23,43 @@ FILE_SPECIFIC_METADATA = '-metadata.json'
 DIRECTORY_METADATA = ['metadata.json', 'csv-metadata.json']
 
 
-def parse_to_graph(metadata_handle):
+def parse_to_graph(metadata_handle, table_url):
+    
+    # ugly hack for test cases 
+    table_url = table_url.replace('w3c.github.io', 'www.w3.org/2013')
+    
     meta_json = simplejson.load(metadata_handle)
+
+    if "tableSchema" in meta_json and "aboutUrl" in meta_json["tableSchema"]:
+        meta_json["tableSchema"]["aboutUrl"] = table_url + meta_json["tableSchema"]["aboutUrl"]
+
     # meta = metadata.validate(meta_json)
     
     meta_graph = ConjunctiveGraph()
     meta_graph.parse(data=json.dumps(meta_json), format='json-ld')
     
-    
+#     for subj, pred, obj in meta_graph:
+#         print (subj, pred, obj)
+        
     return meta_graph
 
-  
+
+
 def _parse_header_field(header_field):
     raise NotImplementedError()
 
 
-def metadata_graph_extraction(url, metadata_handle, embedded_metadata=False):
+def metadata_graph_extraction(url, metadata_handle, table_url, embedded_metadata=False):
     meta_graph = ConjunctiveGraph()
 
     # case  1
     if metadata_handle is not None:
-        new_graph = parse_to_graph(metadata_handle)    
+        new_graph = parse_to_graph(metadata_handle, table_url)    
         meta_graph = meta_graph + new_graph
 
     # case  2
     if embedded_metadata:
-        new_graph = parse_to_graph(StringIO(json.dumps(embedded_metadata)))    
+        new_graph = parse_to_graph(StringIO(json.dumps(embedded_metadata)), table_url)    
         meta_graph = meta_graph + new_graph
 
 
@@ -73,7 +83,7 @@ def metadata_graph_extraction(url, metadata_handle, embedded_metadata=False):
             response = urllib2.urlopen(meta_url)
             if response.getcode() == 200:
                 logger.debug('found file specific metadata: %s', meta_url)
-                new_graph = parse_to_graph(response)
+                new_graph = parse_to_graph(response, table_url)
                 meta_graph = meta_graph + new_graph
                 
         except urllib2.URLError:
@@ -88,7 +98,7 @@ def metadata_graph_extraction(url, metadata_handle, embedded_metadata=False):
                 response = urllib2.urlopen(meta_url)
                 if response.getcode() == 200:
                     logger.debug('found directory specific metadata: %s', meta_url)
-                    meta_graph.parse(parse_to_graph(response))
+                    meta_graph.parse(parse_to_graph(response), table_url)
                     break
             except urllib2.URLError:
                 pass
